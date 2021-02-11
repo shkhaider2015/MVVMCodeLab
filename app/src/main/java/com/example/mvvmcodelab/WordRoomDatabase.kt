@@ -15,32 +15,31 @@ public abstract class WordRoomDatabase : RoomDatabase()
 
 
     private class WordDatabaseCallback(
-        private val scope: CoroutineScope
+            private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.wordDao())
+                    var wordDao = database.wordDao()
+
+                    // Delete all content here.
+                    wordDao.deleteAll()
+
+                    // Add sample words.
+                    var word = Word("Hello")
+                    wordDao.insert(word)
+                    word = Word("World!")
+                    wordDao.insert(word)
+
+                    // TODO: Add your own words!
+                    word = Word("TODO!")
+                    wordDao.insert(word)
                 }
             }
         }
-
-        suspend fun populateDatabase(wordDao: WordDAO) {
-            // Delete all content here.
-            wordDao.deleteAll()
-
-            // Add sample words.
-            var word = Word("Hello")
-            wordDao.insert(word)
-            word = Word("World!")
-            wordDao.insert(word)
-
-            // TODO: Add your own words!
-        }
     }
-
 
 
     companion object{

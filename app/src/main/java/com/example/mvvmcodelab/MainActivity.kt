@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
     private val newWordActivityRequestCode = 1
     private val wordViewModel: WordViewModel by viewModels {
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
             intentData?.getStringExtra(NewWord.EXTRA_REPLY)?.let { reply ->
                 val word = Word(reply)
+                Log.d(TAG, "onActivityResult: " + word.toString())
                 wordViewModel.insert(word)
             }
         } else {
